@@ -1,4 +1,4 @@
-from tools.file_tools import read_file, write_file
+from tools.file_tools import read_file, write_file, create_file, edit_file, append_to_file
 import json
 
 TOOLS = [
@@ -39,12 +39,82 @@ TOOLS = [
             "additionalProperties": False
         },
         "strict": True
+    },
+    {
+        "type":"function",
+        "name":"create_file",
+        "description":"Creates a new file in the workspace with the specified content.",
+        "parameters":{
+            "type":"object",
+            "properties":{
+                "path":{
+                    "type":"string",
+                    "description":"The relative path to the new file in the workspace."
+                },
+                "content":{
+                    "type":"string",
+                    "description":"The content to write to the new file."
+                }
+            },
+            "required":["path", "content"],
+            "additionalProperties": False
+        },
+        "strict": True
+    },
+    {
+        "type":"function",
+        "name":"edit_file",
+        "description":"Edits the content of a file in the workspace.",
+        "parameters":{
+            "type":"object",
+            "properties":{
+                "path":{
+                    "type":"string",
+                    "description":"The relative path to the file in the workspace."
+                },
+                "previous_content":{
+                    "type":"string",
+                    "description":"The previous content of the file."
+                },
+                "new_content":{
+                    "type":"string",
+                    "description":"The new content to write to the file."
+                }
+            },
+            "required":["path", "previous_content", "new_content"],
+            "additionalProperties": False
+        },
+        "strict": True
+    },
+    {
+        "type":"function",
+        "name":"append_to_file",
+        "description":"Appends content to a file in the workspace.",
+        "parameters":{
+            "type":"object",
+            "properties":{
+                "path":{
+                    "type":"string",
+                    "description":"The relative path to the file in the workspace."
+                },
+                "content":{
+                    "type":"string",
+                    "description":"The content to append to the file."
+                }
+            },
+            "required":["path", "content"],
+            "additionalProperties": False
+        },
+        "strict": True
     }
 ]
 
 TOOLS_FUNCTIONS = {
     "read_file": read_file, 
-    "write_file": write_file
+    "write_file": write_file,
+    "create_file": create_file,
+    "edit_file": edit_file,
+    "append_to_file": append_to_file
 }
 
 def execute_tool(tool_name: str, arguments: object) -> str:
