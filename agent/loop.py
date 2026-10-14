@@ -1,4 +1,5 @@
 from tools.file_tools import read_file, write_file, create_file, edit_file, append_to_file
+from tools.shell_tools import run_command, list_directory
 import json
 
 TOOLS = [
@@ -106,6 +107,61 @@ TOOLS = [
             "additionalProperties": False
         },
         "strict": True
+    },
+    {
+        "type": "function",
+        "name": "run_command",
+        "description": (
+            "Execute a Bash command in the workspace or a relative subdirectory. "
+            "Supports shell commands, pipelines, redirection, grep, find, git, "
+            "Python, virtual environments, package installation, builds and tests. "
+            "Returns stdout, stderr, exit_code, duration_seconds and timed_out. "
+            "A nonzero exit code indicates command failure; inspect the output "
+            "and decide how to proceed. Each call starts a new shell."
+        ),
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "command": {
+                    "type": "string",
+                    "description": "The Bash command to execute."
+                },
+                "cwd": {
+                    "type": ["string", "null"],
+                    "description": (
+                        "Working directory relative to the workspace, "
+                        "or null to use the workspace root."
+                    )
+                },
+                "timeout": {
+                    "type": "integer",
+                    "description": "Execution timeout in seconds, from 1 to 300."
+                }
+            },
+            "required": ["command", "cwd", "timeout"],
+            "additionalProperties": False
+        },
+        "strict": True
+    },
+    {
+        "type": "function",
+        "name": "list_directory",
+        "description": "List file and directory names in a workspace directory.",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "cwd": {
+                    "type": ["string", "null"],
+                    "description": (
+                        "Directory relative to the workspace, "
+                        "or null for the workspace root."
+                    )
+                }
+            },
+            "required": ["cwd"],
+            "additionalProperties": False
+        },
+        "strict": True
     }
 ]
 
@@ -114,7 +170,9 @@ TOOLS_FUNCTIONS = {
     "write_file": write_file,
     "create_file": create_file,
     "edit_file": edit_file,
-    "append_to_file": append_to_file
+    "append_to_file": append_to_file,
+    "run_command": run_command,
+    "list_directory": list_directory,
 }
 
 def execute_tool(tool_name: str, arguments: object) -> str:
